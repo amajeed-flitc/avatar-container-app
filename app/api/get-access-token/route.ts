@@ -5,7 +5,7 @@ export async function POST() {
     if (!HEYGEN_API_KEY) {
       throw new Error("API key is missing from .env");
     }
-    const baseApiUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
+    const baseApiUrl = process.env.BASE_API_URL || 'https://api.heygen.com';
 
     const res = await fetch(`${baseApiUrl}/v1/streaming.create_token`, {
       method: "POST",

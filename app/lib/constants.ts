@@ -1,23 +1,23 @@
 export const AVATARS = [
   {
-    avatar_id: "Ann_Therapist_public",
-    name: "Ann Therapist",
+    avatar_id: process.env.NEXT_PUBLIC_AVATAR_ANN_THERAPIST_ID || "Ann_Therapist_public",
+    name: process.env.NEXT_PUBLIC_AVATAR_ANN_THERAPIST_NAME || "Ann Therapist",
   },
   {
-    avatar_id: "Shawn_Therapist_public",
-    name: "Shawn Therapist",
+    avatar_id: process.env.NEXT_PUBLIC_AVATAR_SHAWN_THERAPIST_ID || "Shawn_Therapist_public",
+    name: process.env.NEXT_PUBLIC_AVATAR_SHAWN_THERAPIST_NAME || "Shawn Therapist",
   },
   {
-    avatar_id: "Bryan_FitnessCoach_public",
-    name: "Bryan Fitness Coach",
+    avatar_id: process.env.NEXT_PUBLIC_AVATAR_BRYAN_FITNESS_ID || "Bryan_FitnessCoach_public",
+    name: process.env.NEXT_PUBLIC_AVATAR_BRYAN_FITNESS_NAME || "Bryan Fitness Coach",
   },
   {
-    avatar_id: "Dexter_Doctor_Standing2_public",
-    name: "Dexter Doctor Standing",
+    avatar_id: process.env.NEXT_PUBLIC_AVATAR_DEXTER_DOCTOR_ID || "Dexter_Doctor_Standing2_public",
+    name: process.env.NEXT_PUBLIC_AVATAR_DEXTER_DOCTOR_NAME || "Dexter Doctor Standing",
   },
   {
-    avatar_id: "Elenora_IT_Sitting_public",
-    name: "Elenora Tech Expert",
+    avatar_id: process.env.NEXT_PUBLIC_AVATAR_ELENORA_IT_ID || "Elenora_IT_Sitting_public",
+    name: process.env.NEXT_PUBLIC_AVATAR_ELENORA_IT_NAME || "Elenora Tech Expert",
   },
 ];
 

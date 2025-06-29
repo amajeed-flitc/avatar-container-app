@@ -11,6 +11,17 @@ import {
 } from "./context";
 import { useVoiceChat } from "./useVoiceChat";
 import { useMessageHistory } from "./useMessageHistory";
+import { useSpeechToText } from "./useSpeechToText";
+
+// Helper function to generate a UUID v4 in a cross-browser compatible way
+const generateUUID = (): string => {
+  // Use a simple implementation that works in all environments
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
 
 export const useStreamingAvatarSession = () => {
   const {
@@ -28,8 +39,13 @@ export const useStreamingAvatarSession = () => {
     handleStreamingTalkingMessage,
     handleEndMessage,
     clearMessages,
+    conversation_id,
+    setConversation_id,
+    language,
+    setLanguage,
   } = useStreamingAvatarContext();
   const { stopVoiceChat } = useVoiceChat();
+  const { stopListening } = useSpeechToText();
 
   useMessageHistory();
 
@@ -58,10 +74,13 @@ export const useStreamingAvatarSession = () => {
     avatarRef.current?.off(StreamingEvents.STREAM_DISCONNECTED, stop);
     clearMessages();
     stopVoiceChat();
+    await stopListening();
     setIsListening(false);
     setIsUserTalking(false);
     setIsAvatarTalking(false);
     setStream(null);
+    setConversation_id(null);
+    setLanguage(null);
     await avatarRef.current?.stopAvatar();
     setSessionState(StreamingAvatarSessionState.INACTIVE);
   }, [
@@ -71,9 +90,12 @@ export const useStreamingAvatarSession = () => {
     avatarRef,
     setIsListening,
     stopVoiceChat,
+    stopListening,
     clearMessages,
     setIsUserTalking,
     setIsAvatarTalking,
+    setConversation_id,
+    setLanguage,
   ]);
 
   const start = useCallback(
@@ -92,6 +114,10 @@ export const useStreamingAvatarSession = () => {
       if (!avatarRef.current) {
         throw new Error("Avatar is not initialized");
       }
+
+      // Generate a new UUID for the conversation
+      const newConversationId = generateUUID();
+      setConversation_id(newConversationId);
 
       setSessionState(StreamingAvatarSessionState.CONNECTING);
       avatarRef.current.on(StreamingEvents.STREAM_READY, handleStream);
@@ -113,6 +139,8 @@ export const useStreamingAvatarSession = () => {
       avatarRef.current.on(StreamingEvents.AVATAR_STOP_TALKING, () => {
         setIsAvatarTalking(false);
       });
+      // We're still registering the event handlers for message history purposes,
+      // but the actual processing of user speech is handled in InteractiveAvatar.tsx
       avatarRef.current.on(
         StreamingEvents.USER_TALKING_MESSAGE,
         handleUserTalkingMessage,
@@ -144,6 +172,8 @@ export const useStreamingAvatarSession = () => {
       handleStreamingTalkingMessage,
       handleEndMessage,
       setIsAvatarTalking,
+      setConversation_id,
+      setLanguage,
     ],
   );
 
@@ -151,6 +181,8 @@ export const useStreamingAvatarSession = () => {
     avatarRef,
     sessionState,
     stream,
+    conversation_id,
+    language,
     initAvatar: init,
     startAvatar: start,
     stopAvatar: stop,
